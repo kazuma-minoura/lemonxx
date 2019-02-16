@@ -475,9 +475,9 @@ void ParseInit(void *yypRawParser ParseCTX_PDECL){
 ** A pointer to a parser.  This pointer is used in subsequent calls
 ** to Parse and ParseFree.
 */
-void *ParseAlloc(void *(*mallocProc)(YYMALLOCARGTYPE) ParseCTX_PDECL){
+void *ParseAlloc(){
   yyParser *yypParser;
-  yypParser = (yyParser*)(*mallocProc)( (YYMALLOCARGTYPE)sizeof(yyParser) );
+  yypParser = (yyParser*)malloc( (YYMALLOCARGTYPE)sizeof(yyParser) );
   if( yypParser ){
     ParseCTX_STORE
     ParseInit(yypParser ParseCTX_PARAM);
@@ -584,14 +584,13 @@ void ParseFinalize(void *p){
 ** assumed that the input pointer is never NULL.
 */
 void ParseFree(
-  void *p,                    /* The parser to be deleted */
-  void (*freeProc)(void*)     /* Function used to reclaim memory */
+  void *p                    /* The parser to be deleted */
 ){
 #ifndef YYPARSEFREENEVERNULL
   if( p==0 ) return;
 #endif
   ParseFinalize(p);
-  (*freeProc)(p);
+  free(p);
 }
 #endif /* Parse_ENGINEALWAYSONSTACK */
 /*
@@ -1075,8 +1074,9 @@ static void yy_accept(
 void Parse(
   void *yyp,                   /* The parser */
   int yymajor,                 /* The major token code number */
-  ParseTOKENTYPE yyminor       /* The value for the token */
-  ParseARG_PDECL               /* Optional %extra_argument parameter */
+//  ParseTOKENTYPE yyminor     /* The value for the token */
+//  ParseARG_PDECL             /* Optional %extra_argument parameter */
+%%
 ){
   //YYMINORTYPE yyminorunion;    /* lemon++ -- not needed for destructor */
   YYACTIONTYPE yyact;            /* The parser action. */
